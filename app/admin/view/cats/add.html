@@ -1,0 +1,93 @@
+{include file="public/_meta" /}
+<title>添加行业</title>
+</head>
+<body>
+<div class="page-container">
+	<form action="" method="post" class="form form-horizontal" id="form-category-add">
+		<div id="tab-category" >
+			<div class="tabBar cl"><span>基本设置</span></div>
+			<!-- <div class="tabCon"> -->
+				<!-- <div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">栏目编号：</label>
+					<div class="formControls col-xs-8 col-sm-9">11230</div>
+				</div> -->
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>上级栏目：</label>
+					<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+						<select class="select" id="parentid" name="sel_Sub" onchange="SetSubID(this);">
+							<option value="0">顶级分类</option>
+							{volist name='cats' id='v'}
+								<option value="{$v.id}">{$v.catname}</option>
+								{neq name="v['child']" value=''}
+									{volist name="v['child']" id="vo"}
+										<option value="{$vo.id}">&nbsp;&nbsp;├ {$vo.catname}</option>
+									{/volist}
+								{/neq}
+							{/volist}
+						</select>
+						</span> </div>
+					<div class="col-3"> </div>
+				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>行业名称：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" class="input-text" value="" placeholder="" id="catname" name="" datatype="*2-16" nullmsg="行业名称不能为空">
+					</div>
+					<div class="col-3"> </div>
+				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">内容类型：</label>
+					<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+						<select name="" class="select" id="contenttype">
+							<option value="1">微信图文</option>
+							<!-- <option value="2">图片</option>
+							<option value="3">商品</option>
+							<option value="4">视频</option>
+							<option value="5">专题</option>
+							<option value="6">链接</option> -->
+						</select>
+						</span> </div>
+					<div class="col-3"> </div>
+				</div>
+			<!-- </div> -->
+		</div>
+		<div class="row cl">
+			<div class="col-9 col-offset-3">
+				<input class="btn btn-primary radius" type="button" onclick="cat_submit()" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+			</div>
+		</div>
+	</form>
+</div>
+</div>
+
+{include file="public/_footer" /}
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript">
+function cat_submit(){
+	catname=$("#catname").val();
+	parentid=$("#parentid").val();
+	contenttype=$("#contenttype").val();
+	if((catname == '') || (parentid == '') || (contenttype == '')){
+		layer.msg('内容均不能为空');
+		return false;
+	}
+	$.ajax({
+		url: 'add',
+		type: 'post',
+		dataType: 'json',
+		data: {'catname': catname,'parentid':parentid,'contenttype':contenttype},
+		success:function(res){
+			if(res.status==1){
+				layer.msg('添加成功');
+				setTimeout(function(){parent.location.reload()},1000);
+				// parent.location.reload();
+			}else{
+				layer.msg(res.content);
+			}
+		}
+	})
+}
+</script>
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

@@ -1,0 +1,17 @@
+#! /bin/bash
+SENDTIME=1477635600
+NOWTIME=`date +%s`
+let TIMES=($NOWTIME - $SENDTIME)
+let CHATIME=($TIMES % 86400)
+if test $CHATIME -gt -150 && (test $CHATIME -eq 150 || test $CHATIME -lt 150)
+then
+if test `curl http://youdomain.com/index/index/index/token/yourtoken/id/27` -eq 1
+then
+echo '发送成功' >> /var/www/autowechat/logs/27.log
+else
+echo '发送失败' >> /var/www/autowechat/logs/27.log
+fi
+else
+echo '时间不对' > /var/www/autowechat/logs/27.log
+fi
+exit 0

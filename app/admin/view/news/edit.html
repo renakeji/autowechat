@@ -1,0 +1,147 @@
+{include file="public/_meta" /}
+<link rel="stylesheet" type="text/css" href="/uploadify/uploadify.css">
+<title>添加图文</title>
+</head>
+<body>
+<article class="page-container">
+	<form class="form form-horizontal" id="form-article-add">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>文章标题：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="{$thisnew.title}" placeholder="" id="newstitle" name="">
+			</div>
+		</div>
+		<div class="row cl">
+		<input type="hidden" id="newid" value="{$thisnew.id}" />
+			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>分类栏目：</label>
+			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+				<select name="" class="select" id="catid">
+					{volist name='cats' id='v'}
+						<option value="{$v.id}" {eq name="thisnew['catid']" value="$v.id"}selected="selected"{/eq}>{$v.catname}</option>
+						{neq name="v['child']" value=''}
+							{volist name="v['child']" id="vo"}
+								<option value="{$vo.id}" {eq name="thisnew['catid']" value="$vo.id"}selected="selected"{/eq}>&nbsp;&nbsp;├ {$vo.catname}</option>
+							{/volist}
+						{/neq}
+					{/volist}
+				</select>
+				</span> </div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>文章类型：</label>
+			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+				<select name="" class="select" id="newstype">
+					<option value="0" selected="selected">图文消息</option>
+					<!-- <option value="1">帮助说明</option> -->
+					<!-- <option value="2">新闻资讯</option> -->
+				</select>
+				</span> </div>
+		</div>
+		<!-- <div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">排序值：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="0" placeholder="" id="" name="">
+			</div>
+		</div> -->
+		<!-- <div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">关键词：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="" name="">
+			</div>
+		</div> -->
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">文章摘要：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<textarea name="" id="newsdcps" cols="" rows="" class="textarea"  placeholder="说点什么...最少输入10个字符" datatype="*10-100" dragonfly="true" nullmsg="备注不能为空！" onKeyUp="textarealength(this,200)">{$thisnew['dcps']}</textarea>
+				<p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
+			</div>
+		</div>
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">缩略图：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<div class="uploader-thum-container">
+					<div id="fileList" class="uploader-list"><img  id="imgfile" src="/uploads/{$thisnew['img']}" alt="" style="width: 100px;height: 100px" /></div>
+					<input id="file_upload" name="file_upload" type="file" multiple="true">
+					<input type="hidden" id="fileimg" value="{$thisnew['img']}" />
+				</div>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">文章内容：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<script id="editor" type="text/plain" style="width:100%;height:400px;">{$thisnew['content']}</script>
+			</div>
+		</div>
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+				<button onClick="news_edit_submit();" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 提交</button>
+
+				<button onClick="removeIframe();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+			</div>
+		</div>
+	</form>
+</article>
+
+{include file="public/_footer" /}
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="/static/My97DatePicker/WdatePicker.js"></script>
+<!-- <script type="text/javascript" src="/static/webuploader/0.1.5/webuploader.min.js"></script> -->
+<script type="text/javascript" src="/static/ueditor/1.4.3/ueditor.config.js"></script>
+<script type="text/javascript" src="/static/ueditor/1.4.3/ueditor.all.min.js"> </script>
+<script type="text/javascript" src="/static/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
+<script src="/uploadify/jquery.uploadify.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+	var ue = UE.getEditor('editor');
+
+	<?php $timestamp = time();?>
+	$(function() {
+		$('#file_upload').uploadify({
+			'formData'     : {
+				'timestamp' : '<?php echo $timestamp;?>',
+				'token'     : '<?php echo md5('E10ADC3949BA59ABBE56E057F20F883E' . $timestamp);?>'
+			},
+			'swf'      : '/uploadify/uploadify.swf',
+			'uploader' : '/uploadify/uploadify.php',
+			'onUploadSuccess' : function(file, data, response) {
+				$("#imgfile").attr('src','/uploads/'+data);
+				$("#fileimg").val(data);
+	            console.log(data);
+	        }
+
+		});
+	});
+
+function news_edit_submit(){
+	newstitle=$("#newstitle").val();
+	newid=$("#newid").val();
+	catid=$("#catid").val();
+	newstype=$("#newstype").val();
+	newsdcps=$("#newsdcps").val();
+	imgurl=$("#fileimg").val();
+	content=UE.getEditor('editor').getContent();
+	if((newstitle == '') || (catid == '') || (newstype == '') || (newsdcps == '') && (imgurl == '') &&(content == '')&&(newid == '')){
+		layer.msg('内容均不能为空');
+		return false;
+	}
+	$.ajax({
+		url: 'edit',
+		type: 'post',
+		dataType: 'json',
+		data: {'newstitle': newstitle,'catid':catid,'newstype':newstype,'newsdcps':newsdcps,'imgurl':imgurl,'content':content,'nid':newid},
+		success:function(res){
+			if(res.status==1){
+				layer.msg('修改成功');
+				setTimeout(function(){parent.location.reload()},1000);
+			}else{
+				layer.msg(res.content);
+			}
+		}
+	})
+}
+
+
+</script>
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

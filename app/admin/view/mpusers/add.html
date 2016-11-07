@@ -1,0 +1,172 @@
+{include file="public/_meta" /}
+
+<title>添加用户</title>
+</head>
+<body>
+<article class="page-container">
+	<form action="" method="post" class="form form-horizontal" id="form-member-add">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>公众号名称：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="name" name="name">
+			</div>
+		</div>
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>appid：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="appid" name="appid">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>appsecret：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="appsecret" name="appsecret">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">发送条数</label>
+			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+				<select class="select" size="1" id="nums" name="nums">
+					<option value="1">1条</option>
+					<option value="2">2条</option>
+					<option value="3" selected="selected">3条</option>
+					<option value="4">4条</option>
+					<option value="5">5条</option>
+					<option value="6">6条</option>
+					<option value="7">7条</option>
+					<option value="8">8条</option>
+				</select>
+				</span> </div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">所发栏目：</label>
+			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+				<select class="select" size="1" id="catid" name="catid">
+					{volist name='cats' id='v'}
+								<option value="{$v.id}">{$v.catname}</option>
+								{neq name="v['child']" value=''}
+									{volist name="v['child']" id="vo"}
+										<option value="{$vo.id}">&nbsp;&nbsp;├ {$vo.catname}</option>
+									{/volist}
+								{/neq}
+							{/volist}
+				</select>
+				</span> </div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">定时发送时间：</label>
+			<div class="formControls col-xs-8 col-sm-9"> <input type="text" class="input-text" onclick="WdatePicker({dateFmt:'HH:mm:ss'})"  placeholder="" name="sendtime" id="sendtime" value="">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>开始时间：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" onclick="WdatePicker({maxDate:'#F{ $dp.$D(\'endtime\')||\'%y-%M-%d\'}'})"   placeholder="" name="starttime" id="starttime" value="">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>结束时间：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" onclick="WdatePicker({minDate:'#F{ $dp.$D(\'starttime\')}'})"  placeholder="" name="endtime" id="endtime" value="">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>状态：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<div class="radio-box">
+					<input name="status" type="radio" id="status-1" checked value="1">
+					<label for="status-1">启用</label>
+				</div>
+				<div class="radio-box">
+					<input type="radio" id="status-2" name="status" value="0">
+					<label for="status-2">禁用</label>
+				</div>
+			</div>
+		</div>
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<input class="btn btn-primary radius" onClick="mpuser_submit()" type="button" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+			</div>
+		</div>
+	</form>
+</article>
+{include file="public/_footer" /}
+<script type="text/javascript" src="/static/My97DatePicker/WdatePicker.js"></script>
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript">
+$(function(){
+	$('.skin-minimal input').iCheck({
+		checkboxClass: 'icheckbox-blue',
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});
+
+	$("#form-member-add").validate({
+		rules:{
+			username:{
+				required:true,
+				minlength:2,
+				maxlength:16
+			},
+			sex:{
+				required:true,
+			},
+			mobile:{
+				required:true,
+				isMobile:true,
+			},
+			email:{
+				required:true,
+				email:true,
+			},
+			uploadfile:{
+				required:true,
+			},
+
+		},
+		onkeyup:false,
+		focusCleanup:true,
+		success:"valid",
+		submitHandler:function(form){
+			//$(form).ajaxSubmit();
+			var index = parent.layer.getFrameIndex(window.name);
+			//parent.$('.btn-refresh').click();
+			parent.layer.close(index);
+		}
+	});
+});
+function mpuser_submit(){
+	name=$("#name").val();
+	appid=$("#appid").val();
+	appsecret=$("#appsecret").val();
+	nums=$("#nums").val();
+	catid=$("#catid").val();
+	sendtime=$("#sendtime").val();
+	starttime=$("#starttime").val();
+	endtime=$("#endtime").val();
+	status=$("input[name=status]:checked").val();
+	if((name == '') || (appid == '') || (appsecret == '')|| (nums == '')|| (catid == '')|| (sendtime == '')|| (starttime == '')|| (endtime == '')|| (status == '')){
+		layer.msg('内容均不能为空');
+		return false;
+	}
+	$.ajax({
+		url: 'add',
+		type: 'post',
+		dataType: 'json',
+		data: {'name': name,'appid':appid,'appsecret':appsecret,'nums':nums,'catid':catid,'sendtime':sendtime,'starttime':starttime,'endtime':endtime,'status':status},
+		success:function(res){
+			if(res.status==1){
+				layer.msg('添加成功,即将跳回');
+				setTimeout(function(){parent.location.reload()},1000);
+				// parent.location.reload();
+			}else{
+				layer.msg(res.content);
+			}
+		}
+	})
+}
+</script>
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

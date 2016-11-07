@@ -1,0 +1,132 @@
+autowechat 数据库
+
+
+
+1：wx_mpusers公众号表
+id
+
+name //公众号名称
+
+appid   //appid
+
+appsecret    //appsercet
+
+nums     //发送条数
+
+catid    //自动发送消息，所选分类
+
+sendtime //发送时间
+
+status //账号状态，1正常发送，0禁用，不再发送
+
+addtime  //公众号添加时间
+
+starttime //开始日期，商业用途
+
+endtime //结束日期，
+
+isdel //是否删除
+
+updatetime //操作更新时间
+
+2：wx_news图文消息表
+id
+
+title //标题
+
+author //作者
+
+content //内容
+
+img //封面
+
+imgid //上传到公众账号以后的素材id，方便以后调用，
+
+dcps //摘要
+
+catid  //所属行业
+
+isshow //是否允许自动发送
+
+addtime  //添加时间
+
+updatetime //修改时间
+
+trueauthor //真正的作者
+
+isdel  //是否删除
+
+msgid //本条消息的素材id
+
+3：wx_cat行业分类表
+
+id
+
+catname //行业名称
+
+childid //子行业
+
+parentid //父行业
+
+addtime  //添加时间
+
+updatetime //修改时间
+
+author  //谁添加的
+
+status  //状态，是否使用1使用，0禁用
+
+isdel //删除与否
+
+3：wx_sendlog发送记录表
+
+id
+
+uid  //公众号id
+
+content //所发消息内容id
+
+sendtime   //发送时间
+
+backcontent  //微信服务器返回的消息
+
+status   //发送状态
+
+additme  //添加时间
+
+4：wx_admin管理员表  //可以编辑图文，编辑公众账号信息
+
+id
+
+name //用户名，登录用
+
+passwd //密码
+
+salt //加密盐设置
+
+nickname //显示为trueauthor
+
+level //权限等级  1.只可以操作自己的图文,2.可以操作图文,所有  3. 可以操作图文和公众号  4.全部权限
+
+additme  //添加时间
+
+status //状态，1为正常，-1为删除，0为禁用
+
+5：wx_logs管理员操作日志
+
+id
+
+uid   //用户id
+
+ip  //操作时ip
+
+action //具体动作
+
+actiontime //操作时间
+
+content //提交状态
+
+truecontent  //真正的发送状态
+
+
+
