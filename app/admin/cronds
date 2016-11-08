@@ -3,9 +3,9 @@ directory="/var/www/autowechat/app/admin/crond/"
 chmod -R 777 /var/www/autowechat/app/admin/crond/*
 for file in `ls $directory`
 do
-        if test `curl http://youdomian/index/index/checkuser/token/f8d919cb79da2c56569a2ec7366e9c4f/id/{$file:0:2}` -eq 1
+        if test `curl http://youdomian/index/index/checkuser/token/f8d919cb79da2c56569a2ec7366e9c4f/id/$file` -eq 1
         then
-                 sh /var/www/autowechat/app/admin/crond/$file
+                bash /var/www/autowechat/app/admin/crond/$file
         else
                 rm -f /var/www/autowechat/app/admin/crond/$file
         fi

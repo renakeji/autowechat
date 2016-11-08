@@ -3,7 +3,7 @@
  * @Author: renakeji
  * @Date:   2016-10-24 17:35:37
  * @Last Modified by:   renakeji
- * @Last Modified time: 2016-11-07 11:14:43
+ * @Last Modified time: 2016-11-08 15:58:42
  */
 namespace app\admin\controller;
 use think\Controller;
@@ -60,7 +60,7 @@ class mpusers extends controller
 
             //当栏目写入成功，并且不是顶级栏目,则将返回的栏目id写入到父id的子id字段
             if($cid > 0 ){
-                    $s=fopen(__DIR__.'/../crond/'.$cid.'.crond','w+');
+                    $s=fopen(__DIR__.'/../crond/'.$cid,'w+');
                     fwrite($s,'#! /bin/bash'."\n");
                     fwrite($s,'SENDTIME='.$data['sendtime']."\n");
                     fwrite($s,'NOWTIME=`date +%s`'."\n");
@@ -111,7 +111,7 @@ class mpusers extends controller
             $cid=Db::name('mpusers')->where('id',$uid)->update($data);
             //当栏目写入成功，并且不是顶级栏目,则将返回的栏目id写入到父id的子id字段
             if($cid > 0 ){
-                    $s=fopen(__DIR__.'/../crond/'.$uid.'.crond','w+');
+                    $s=fopen(__DIR__.'/../crond/'.$uid,'w+');
                     fwrite($s,'#! /bin/bash'."\n");
                     fwrite($s,'SENDTIME='.$data['sendtime']."\n");
                     fwrite($s,'NOWTIME=`date +%s`'."\n");
