@@ -3,7 +3,7 @@
  * @Author: renakeji
  * @Date:   2016-10-24 17:14:59
  * @Last Modified by:   renakeji
- * @Last Modified time: 2016-10-25 16:27:57
+ * @Last Modified time: 2016-11-09 16:20:18
  */
 namespace app\admin\controller;
 use think\Controller;
@@ -98,6 +98,16 @@ class news extends controller{
             $this->assign('thisnew',$thisnew);
             return $this->fetch();
         }
+    }
+
+    public function show(){
+
+        $nid=input('get.nid');
+        $thisnew=Db::name('news')->where('isdel','<>','1')->where('isshow','1')->where('id',$nid)->find();
+        $thisnew['content']=str_replace('data-source="bj.96weixin.com"','',$thisnew['content']);
+        $this->assign('thisnew',$thisnew);
+        return $this->fetch();
+
     }
 
     public function del(){

@@ -45,17 +45,17 @@ class Index extends controller
             //本地上传图片的处理
             //处理文章内的图片
            preg_match_all('/<img.*? src=\"http:\/\/im2\.96weixin\.com?(.*?\.(jpg|gif|bmp|bnp|png|mp4))\"?.*?>/i',$sendnews[$k]['content'],$match);
-            $result_media=$match[1];
+            // $result_media=$match[1];
 
-            foreach($result_media as $key_media=>$val_media){
-                var_dump($val_media);
-                $url_media=explode('"',$val_media);
-                $url_me=$url_media[0];
+            // foreach($result_media as $key_media=>$val_media){
+            //     var_dump($val_media);
+            //     $url_media=explode('"',$val_media);
+            //     $url_me=$url_media[0];
                 // var_dump($url_me);
            //      $urllh=GrabImage($url_media[0],'');
            //      $urlmedia=$weObj->uploadImg(array("media"=>"@".$urllh),'image');
            //      $sendnews[$k]['content'] = str_replace($val_media,'\"'.$urlmedia['url'],$sendnews[$k]['content']);//将URL替换为微信平台返回的URL
-            }
+            // }
         }
         exit;
         //拼凑图文

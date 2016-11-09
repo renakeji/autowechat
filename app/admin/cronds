@@ -6,8 +6,6 @@ do
         if test `curl http://youdomian/index/index/checkuser/token/f8d919cb79da2c56569a2ec7366e9c4f/id/$file` -eq 1
         then
                 bash /var/www/autowechat/app/admin/crond/$file
-        else
-                rm -f /var/www/autowechat/app/admin/crond/$file
         fi
 done
 exit 0

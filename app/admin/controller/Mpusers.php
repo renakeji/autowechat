@@ -3,7 +3,7 @@
  * @Author: renakeji
  * @Date:   2016-10-24 17:35:37
  * @Last Modified by:   renakeji
- * @Last Modified time: 2016-11-08 15:58:42
+ * @Last Modified time: 2016-11-09 15:24:00
  */
 namespace app\admin\controller;
 use think\Controller;
@@ -59,7 +59,8 @@ class mpusers extends controller
             $cid=Db::name('mpusers')->insertGetId($data);
 
             //当栏目写入成功，并且不是顶级栏目,则将返回的栏目id写入到父id的子id字段
-            if($cid > 0 ){
+
+            if($cid > 0){
                     $s=fopen(__DIR__.'/../crond/'.$cid,'w+');
                     fwrite($s,'#! /bin/bash'."\n");
                     fwrite($s,'SENDTIME='.$data['sendtime']."\n");
@@ -68,7 +69,7 @@ class mpusers extends controller
                     fwrite($s,'let CHATIME=($TIMES % 86400)'."\n");
                     fwrite($s,'if test $CHATIME -gt -150 && (test $CHATIME -eq 150 || test $CHATIME -lt 150)'."\n");
                     fwrite($s,'then'."\n");
-                    fwrite($s,'if test `curl http://youdomain.com/index/index/index/token/youtoken/id/'.$cid.'` -eq 1'."\n");
+                    fwrite($s,'if test `curl http://yourdomian.com/index/index/index/token/yourtoken/id/'.$cid.'` -eq 1'."\n");
                     fwrite($s,'then'."\n");
                     fwrite($s,'echo \'发送成功\' >> /var/www/autowechat/logs/'.$cid.'.log'."\n");
                     fwrite($s,'else'."\n");
@@ -79,14 +80,10 @@ class mpusers extends controller
                     fwrite($s,'fi'."\n");
                     fwrite($s,'exit 0'."\n");
                     fclose($s);
-                    if($s['status']==0){
-                        $file=__DIR__.'/../crond/'.$cid.'.crond';
-                        @unlink($file);
-                    }
-                    echo json_encode(array("status"=>1,"content"=>"添加成功"));exit;
-                }else{
-                    echo json_encode(array("status"=>0,"content"=>"添加失败，请稍后重试"));exit;
-                }
+                echo json_encode(array("status"=>1,"content"=>"添加成功"));exit;
+            }else{
+                echo json_encode(array("status"=>0,"content"=>"添加失败，请稍后重试"));exit;
+            }
         }else{
             return $this->fetch();
         }
@@ -108,9 +105,9 @@ class mpusers extends controller
                 'updatetime'=>time()
             );
             // Db::name('cat')->insert($data);
-            $cid=Db::name('mpusers')->where('id',$uid)->update($data);
+            $cuid=Db::name('mpusers')->where('id',$uid)->update($data);
             //当栏目写入成功，并且不是顶级栏目,则将返回的栏目id写入到父id的子id字段
-            if($cid > 0 ){
+            if($cuid > 0){
                     $s=fopen(__DIR__.'/../crond/'.$uid,'w+');
                     fwrite($s,'#! /bin/bash'."\n");
                     fwrite($s,'SENDTIME='.$data['sendtime']."\n");
@@ -130,10 +127,7 @@ class mpusers extends controller
                     fwrite($s,'fi'."\n");
                     fwrite($s,'exit 0'."\n");
                     fclose($s);
-                    if($s['status']==0){
-                        $file=__DIR__.'/../crond/'.$cid.'.crond';
-                        @unlink($file);
-                    }
+
                     echo json_encode(array("status"=>1,"content"=>"修改成功"));exit;
                 }else{
                     echo json_encode(array("status"=>0,"content"=>"修改失败，请稍后重试"));exit;
@@ -149,7 +143,7 @@ class mpusers extends controller
     public function del(){
         $cid=input('get.uid');
         if(Db::name('mpusers')->where('id',$cid)->update(['isdel'=>1,'updatetime'=>time()])){
-            $file=__DIR__.'/../crond/'.$cid.'.crond';
+            $file=__DIR__.'/../crond/'.$cid;
             @unlink($file);
             echo json_encode(array("status"=>1,"content"=>"删除成功"));exit;
         }else{
